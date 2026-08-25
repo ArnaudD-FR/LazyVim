@@ -9,6 +9,20 @@ return {
           filetypes = { "rst" },
         },
       },
+      setup = {
+        pyright = function()
+          Snacks.util.lsp.on({ name = "pyright" }, function(_, client)
+            -- Let jedi be the sole source of navigation results. Both servers
+            -- answer otherwise and every location is listed twice, and jedi
+            -- reaches real source where pyright stops at a typeshed stub.
+            local caps = client.server_capabilities
+            caps.definitionProvider = false
+            caps.declarationProvider = false
+            caps.typeDefinitionProvider = false
+            caps.referencesProvider = false
+          end)
+        end,
+      },
     },
   },
 
